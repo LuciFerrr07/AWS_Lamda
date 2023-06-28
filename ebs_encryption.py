@@ -37,7 +37,8 @@ def lambda_handler(event, context):
         create_encrypted_volume(vol_id)
         time.sleep(5)
         attach_volume(in_id)
-    start_instance(in_id)
+        start_instance(in_id)
+        delete_detached_volume(vol_id)
     
     return {
         'statusCode': 200,
@@ -96,4 +97,8 @@ def start_instance(in_id):
         else:
             v = client.describe_volumes(VolumeIds=[new_vol[-1]])
     response = client.start_instances(InstanceIds = [in_id])
+    return response
+
+def delete_detached_volume(v_id):
+    response = client.delete_volume(VolumeId=v_id)
     return response
